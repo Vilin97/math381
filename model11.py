@@ -52,8 +52,20 @@ print(f"constraints: ")
 for name, constraint in model.constraints.items():
     print(f"  {name}: {round(constraint.value(),1)}")
 
-
-
+# Solution:
+# objective: 11730 -- means the maximum profit is 11730
+# x_1b: 0.0 -- means take 0 tons of cargo 1 in the back compartment
+# x_1c: 15.5 -- means take 15.5 tons of cargo 1 in the center compartment
+# x_1f: 0.0 -- means take 0 tons of cargo 1 in the front compartment
+# x_2b: 3.3
+# x_2c: 0.8
+# x_2f: 7.3
+# x_3b: 0.0
+# x_3c: 0.0
+# x_3f: 0.0
+# x_4b: 6.7
+# x_4c: 1.7
+# x_4f: 4.7
 
 
 

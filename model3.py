@@ -25,3 +25,30 @@ print("Status:", p.LpStatus[prob.status])
 for v in prob.variables():
     print(v.name, "=", round(v.varValue))
 print("Minimum Number of Collectors = ", round(p.value(prob.objective)))
+
+# Solution:
+# Minimum Number of Collectors = 16  -- means 16 collectors must be hired
+# x_0 = 0 -- means hire 0 collectors to start at hour 0 (midnight)
+# x_1 = 4 -- means hire 4 collectors to start at hour 1 (1 AM)
+# x_10 = 0 -- etc
+# x_11 = 0
+# x_12 = 0
+# x_13 = 1
+# x_14 = 2
+# x_15 = 2
+# x_16 = 2
+# x_17 = 0
+# x_18 = 0
+# x_19 = 0
+# x_2 = 0
+# x_20 = 0
+# x_21 = 0
+# x_22 = 0
+# x_23 = 0
+# x_3 = 1
+# x_4 = 1
+# x_5 = 1
+# x_6 = 1
+# x_7 = 1
+# x_8 = 0
+# x_9 = 0
