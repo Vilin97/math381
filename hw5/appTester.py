@@ -10,8 +10,10 @@ def AppTester():
             return True
     return False
 
-N = 10**6
+print(f"Result of ten experiments: {[AppTester() for i in range(10)]}") # I got [True, True, True, True, True, True, True, True, True, True]
+
+N = 10**5
 counter = 0
 for i in range(N):
     counter += AppTester()
-print(f"probability of seeing 6 out of 8 rolls in 100 rolls: {counter/N}") # 0.965772
+print(f"probability of seeing 6 out of 8 rolls in 100 rolls: {counter/N}") # I got 0.965772
