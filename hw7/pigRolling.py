@@ -81,12 +81,112 @@ def k_rolls(k):
 # = x*0.858215883 + 6.1894201219
 
 # testing that relative difference between the calculated expected value and the observed average is small
-for x in range(10):
-    diff = abs(x*0.858215883 + 6.1894201219 - sum([score_roll(roll1, roll2, x) for (roll1, roll2) in k_rolls(10**5)])/10**5)
-    print(f"relative difference for x = {x}: {round(diff/(x*0.858215883 + 6.1894201219), 3)}")
+def prob3():
+    for x in range(10):
+        diff = abs(x*0.858215883 + 6.1894201219 - sum([score_roll(roll1, roll2, x) for (roll1, roll2) in k_rolls(10**5)])/10**5)
+        print(f"relative difference for x = {x}: {round(diff/(x*0.858215883 + 6.1894201219), 3)}")
+# prob3()
 
 # problem 4
-# TODO
+
+def prob4():
+    import matplotlib
+    import matplotlib.pyplot as plt
+    import numpy as np
+    matplotlib.use('TKAgg')
+    from scipy.stats import norm
+    import matplotlib.pyplot as plt
+
+    results = [0]*1000
+    for j in range(1000):
+        rolls = k_rolls(30)
+        results[j] = sum([score_roll(rolls[i][0],rolls[i][1]) for i in range(30)])/30
+
+    plt.hist(results, bins = 20)
+    mean,std=norm.fit(results)
+    print(f"mean: {mean}, std: {std}")
+    xmin, xmax = plt.xlim()
+    x = np.linspace(xmin, xmax, 200)
+    y = norm.pdf(x, mean, std)
+    plt.plot(x, 10000/sum(y)*y)
+    plt.show()
+
+# prob4()
 
 # problem 5
-# The first strategy is better because the second strategy will NEVER win. In fact, the score for the second strategy will stay at 0 forever, because the only stop condition is pigout, which resets the entire turn's score back to 0.
+def make_turn(stop_condition):
+    x = 0
+    while not stop_condition(x):
+        roll1, roll2 = one_roll()
+        roll_score = score_roll(roll1, roll2, x=x)
+        if roll_score == 0:
+            x = 0
+            break
+        else:
+            x += roll_score
+    return x
+
+def compare_strategies(N = 10**4):
+    wins1 = 0
+    wins2 = 0
+    for _ in range(N): # strategy 1 goes first
+        score1 = 0
+        score2 = 0
+        while True:
+            score1 += make_turn(lambda x: x > x*0.858215883 + 6.1894201219)
+            if score1 >= 100:
+                wins1 += 1
+                break
+            score2 += make_turn(lambda x: x >= 100)
+            if score2 >= 100:
+                wins2 += 1
+                break
+
+    for _ in range(N): # strategy 2 goes first
+        score1 = 0
+        score2 = 0
+        while True:
+            score2 += make_turn(lambda x: x > 100)
+            if score2 >= 100:
+                wins2 += 1
+                break
+            score1 += make_turn(lambda x: x > x*0.858215883 + 6.1894201219)
+            if score1 >= 100:
+                wins1 += 1
+                break
+    return wins1/(2*N), wins2/(2*N)
+
+def avg_num_turns(N = 10**4):
+    num_turns1 = 0
+    for _ in range(N):
+        score = 0
+        while True:
+            num_turns1 += 1
+            score += make_turn(lambda x: x > x*0.858215883 + 6.1894201219)
+            # print(score)
+            if score >= 100:
+                break
+        
+    num_turns2 = 0
+    for _ in range(N):
+        score = 0
+        while True:
+            num_turns2 += 1
+            score += make_turn(lambda x: x > 100)
+            # print(score)
+            if score >= 100:
+                break
+    return num_turns1/N, num_turns2/N
+
+
+def prob5():
+    t1, t2 = avg_num_turns(10**4)
+    print(f"average number of turns to 100 with strategy 1: {t1} \naverage number of turns to 100 with strategy 2: {t2}")
+
+    win_ratio1, win_ratio2 = compare_strategies(N = 10**4)
+    if win_ratio1 > win_ratio2:
+        print(f"Strategy 1 is better with win ratio {win_ratio1}")
+    else:
+        print(f"Strategy 2 is better with win ratio {win_ratio2}")
+
+prob5() # STRATEGY 2 IS BETTER
