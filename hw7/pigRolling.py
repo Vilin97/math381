@@ -82,9 +82,14 @@ def k_rolls(k):
 
 # testing that relative difference between the calculated expected value and the observed average is small
 def prob3():
-    for x in range(10):
-        diff = abs(x*0.858215883 + 6.1894201219 - sum([score_roll(roll1, roll2, x) for (roll1, roll2) in k_rolls(10**5)])/10**5)
-        print(f"relative difference for x = {x}: {round(diff/(x*0.858215883 + 6.1894201219), 3)}")
+    largest_relative_diff = 0
+    for x in range(99):
+        diff = abs(x*0.858215883 + 6.1894201219 - sum([score_roll(roll1, roll2, x) for (roll1, roll2) in k_rolls(10**5)])/10**4)
+        rel_diff = round(diff/(x*0.858215883 + 6.1894201219), 3)
+        largest_relative_diff = max(rel_diff, largest_relative_diff)
+        if rel_diff > 0.05:
+            print(f"relative difference for x = {x}: {round(diff/(x*0.858215883 + 6.1894201219), 3)}")
+    print(f"largest relative difference is {largest_relative_diff}")
 # prob3()
 
 # problem 4
@@ -111,19 +116,14 @@ def prob4():
     plt.plot(x, 10000/sum(y)*y)
     plt.show()
 
-# prob4()
-
 # problem 5
 def make_turn(stop_condition):
     x = 0
     while not stop_condition(x):
         roll1, roll2 = one_roll()
-        roll_score = score_roll(roll1, roll2, x=x)
-        if roll_score == 0:
-            x = 0
+        x = score_roll(roll1, roll2, x=x)
+        if x == 0:
             break
-        else:
-            x += roll_score
     return x
 
 def compare_strategies(N = 10**4):
@@ -163,7 +163,6 @@ def avg_num_turns(N = 10**4):
         while True:
             num_turns1 += 1
             score += make_turn(lambda x: x > x*0.858215883 + 6.1894201219)
-            # print(score)
             if score >= 100:
                 break
         
@@ -173,11 +172,9 @@ def avg_num_turns(N = 10**4):
         while True:
             num_turns2 += 1
             score += make_turn(lambda x: x > 100)
-            # print(score)
             if score >= 100:
                 break
     return num_turns1/N, num_turns2/N
-
 
 def prob5():
     t1, t2 = avg_num_turns(10**4)
@@ -189,4 +186,9 @@ def prob5():
     else:
         print(f"Strategy 2 is better with win ratio {win_ratio2}")
 
-prob5() # STRATEGY 2 IS BETTER
+print("Problem 3:")
+prob3()
+print("Problem 4:")
+prob4()
+print("Problem 5:")
+prob5()
